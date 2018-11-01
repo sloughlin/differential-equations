@@ -121,7 +121,7 @@ def plot_error(error_list, titles):
     for i in range(m):
         ax.semilogy(x, Y[i], label = titles[i])
 
-    ax.set(xlabel='Iteration', ylabel='Probability')
+    ax.set(xlabel='Iteration', ylabel='Absolute Error')
     ax.legend()
     plt.show()
 

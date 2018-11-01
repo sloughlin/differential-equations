@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-# %matplotlib inline
+%matplotlib inline
 
 # Define functions to get stationary distribution and generate plots
 
@@ -11,8 +11,8 @@ def get_stationary_distribution(transition_matrix, initial_state, steps = 100):
     #Initialize state vector to initial state, matrix to keep track of state vectors
     current_state = initial_state
     state_list = []
-
-    for s in range(steps):
+    state_list.append(initial_state)
+    for s in range(steps-1):
         #Equivalent to multiplying transition matrix by itself n times, then initial_state
         current_state = transition_matrix @ current_state
         #Normalize product with 1-norm (to account for floating point error):
@@ -57,7 +57,6 @@ def generate_plots(state_list, titles, single_plot = True):
         for ax in axarr.flat:
             ax.label_outer()
         plt.show()
-
 # 3.1 Questions
 #1
 #Define transition matrix, initial state vector (initial state colorado.edu)
@@ -98,30 +97,35 @@ def get_abs_error(approx, true):
     
     #initialize list for errors:
     m, n = approx.shape
-    error_list = np.zeros(n)
+    error_list = np.zeros(approx.shape).T
     approx = approx.T # transpose to access columns
     
     # loop over columns of approx to get approximate stationary dist at each step
     for j in range(n):
         # defining absolute error as 1-norm of the vector approximation - true
-        error_list[j] = np.linalg.norm(approx[:][j] - true, ord = 1)
-    return error_list
+        error_list[:][j] = abs(approx[:][j] - true)
+    return error_list.T
         
 # takes in mxn list of error vectors
-def plot_error(error_list):
+def plot_error(error_list, titles):
     
-    n = len(error_list)
+    m, n = error_list.shape
     x = np.linspace(0, n, n)
+    Y = []
+    #Get errors of each page from rows of state_list
+    for i in range(m):
+        Y.append(error_list[i])
 
     f, ax = plt.subplots(1, figsize = (8, 6))
     f.suptitle('Absolute Error of Stationary Distribution Approximations from 1 to {} Iterations'.format(n))
-    
-    ax.semilogy(x, error_list)
+    for i in range(m):
+        ax.semilogy(x, Y[i], label = titles[i])
 
-    ax.set(xlabel='Iteration', ylabel='Log of Absolute Error')
+    ax.set(xlabel='Iteration', ylabel='Probability')
+    ax.legend()
     plt.show()
 
-#Calculate and plot errors in stationary dist. approx. for webpage_matrix_2:
+    #Calculate and plot errors in stationary dist. approx. for webpage_matrix_2:
 true_dist = np.array([0,0,0,0,1])
 error_list = get_abs_error(state_list_2, true_dist)
-plot_error(error_list)
+plot_error(error_list, titles_2)

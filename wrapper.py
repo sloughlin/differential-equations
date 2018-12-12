@@ -7,8 +7,6 @@ import subprocess
 Run load_forecast() with the given lat, lng, and time arguments.
 """
 
-api_key = "0b7ff6c359bb16ddf027c16535ac2ad0"
-#'https://api.forecast.io/forecast/0b7ff6c359bb16ddf027c16535ac2ad0/40.014984,-105.270546'
 
 lat = 40.014984
 lng = -105.270546
